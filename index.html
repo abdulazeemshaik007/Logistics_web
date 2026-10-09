@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SwiftShip Logistics</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
+:root{--blue:#123b75;--orange:#ff8c25;--light:#f4f7fc}
+html{scroll-behavior:smooth}
+body{color:#172337;line-height:1.6}
+.container{width:90%;max-width:1150px;margin:auto}
+a{text-decoration:none;color:inherit}
+.btn{display:inline-block;background:var(--orange);color:white;border:0;padding:12px 22px;border-radius:5px;font-weight:bold;cursor:pointer}
+.btn:hover{background:#e87510}
+header{background:white;box-shadow:0 2px 10px #0001;position:sticky;top:0;z-index:10}
+.navbar{display:flex;align-items:center;justify-content:space-between;min-height:75px}
+.logo{font-size:27px;font-weight:900;color:var(--blue)}
+.logo span{color:var(--orange)}
+nav{display:flex;align-items:center;gap:23px}
+nav a{font-size:14px;font-weight:bold}
+nav a:hover{color:var(--orange)}
+.menu{display:none;background:none;border:0;font-size:28px;color:var(--blue)}
+.hero{min-height:520px;display:flex;align-items:center;color:white;background:linear-gradient(90deg,#0a2856ed,#123b7580),url('https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=1600&q=80') center/cover}
+.hero-content{max-width:620px;padding:70px 0}
+.hero small{color:#ffb36b;font-weight:bold;letter-spacing:2px}
+.hero h1{font-size:clamp(38px,5vw,60px);line-height:1.15;margin:18px 0}
+.hero p{font-size:17px;color:#e5ecf7;margin-bottom:25px}
+.outline{display:inline-block;border:1px solid white;padding:11px 22px;border-radius:5px;margin-left:10px;font-weight:bold}
+section{padding:65px 0}
+.tracking{margin-top:-35px;position:relative;padding:28px;background:white;border-radius:10px;box-shadow:0 10px 35px #0002}
+.tracking h2,.section-title h2{color:var(--blue)}
+.tracking p{color:#64748b;margin:6px 0 15px}
+.track-form{display:flex;gap:10px}
+input,select,textarea{width:100%;padding:12px;border:1px solid #d7dfeb;border-radius:5px;outline:none}
+input:focus,select:focus,textarea:focus{border-color:var(--blue)}
+#trackingResult,#bookingResult{margin-top:15px}
+.result{padding:16px;background:#eff6ff;border-left:4px solid var(--blue);border-radius:5px}
+.status{display:inline-block;background:#ffedd5;color:#92400e;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:bold}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;padding:45px 0}
+.stat{text-align:center;border-right:1px solid #ddd}
+.stat:last-child{border:0}
+.stat h2{font-size:32px;color:var(--blue)}
+.stat p{font-size:14px;color:#64748b}
+.services,.booking{background:var(--light)}
+.section-title{text-align:center;margin-bottom:35px}
+.section-title h2{font-size:32px;margin-bottom:8px}
+.section-title p{color:#64748b}
+.service-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+.card{background:white;border:1px solid #e5eaf2;border-radius:9px;padding:25px;transition:.25s}
+.card:hover{transform:translateY(-5px);box-shadow:0 10px 25px #123b7515}
+.icon{font-size:32px;margin-bottom:12px}
+.card h3{color:var(--blue);margin-bottom:8px}
+.card p{font-size:14px;color:#64748b;margin-bottom:15px}
+.more{color:var(--orange);font-weight:bold;font-size:14px}
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:45px;align-items:center}
+.about-img{width:100%;height:360px;object-fit:cover;border-radius:10px}
+.about-text h2{font-size:34px;line-height:1.25;color:var(--blue);margin:12px 0}
+.about-text p{color:#64748b;margin-bottom:15px}
+.about-text ul{list-style:none;margin:20px 0}
+.about-text li{margin:10px 0;font-weight:bold}
+.about-text li:before{content:"✓";color:#15945a;margin-right:10px}
+.process{background:var(--blue);color:white}
+.process .section-title h2{color:white}
+.process .section-title p{color:#d4e0f0}
+.process-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:25px}
+.step{text-align:center;padding:15px}
+.number{margin:0 auto 15px;background:var(--orange);width:60px;height:60px;border-radius:50%;display:grid;place-items:center;font-size:24px;font-weight:bold}
+.step p{color:#d4e0f0;font-size:14px;margin-top:8px}
+.booking-box{max-width:850px;margin:auto;background:white;padding:30px;border-radius:10px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.field{margin-bottom:5px}
+.field label{display:block;font-weight:bold;font-size:14px;margin-bottom:6px}
+.full{grid-column:1/-1}
+.contact-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.contact-card{text-align:center;border:1px solid #e5eaf2;padding:25px;border-radius:8px}
+.contact-card h3{color:var(--blue)}
+.contact-card p{font-size:14px;color:#64748b}
+footer{background:#0c1d35;color:white;padding:45px 0 20px}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:30px;margin-bottom:30px}
+.footer-grid p,.footer-grid a{font-size:14px;color:#bdc8d8}
+.footer-grid p{margin-top:12px}
+.footer-grid h3{margin-bottom:12px;font-size:16px}
+.footer-grid a{display:block;margin:8px 0}
+.footer-grid a:hover{color:var(--orange)}
+.copyright{text-align:center;border-top:1px solid #ffffff25;padding-top:18px;font-size:13px;color:#bdc8d8}
+@media(max-width:900px){
+nav{gap:12px}.service-grid{grid-template-columns:repeat(2,1fr)}
+.footer-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:650px){
+.menu{display:block}
+nav{display:none;position:absolute;top:75px;left:0;width:100%;background:white;padding:15px 5%;box-shadow:0 10px 15px #0001;flex-direction:column;align-items:stretch;gap:0}
+nav.active{display:flex}
+nav a{padding:11px 0;border-bottom:1px solid #eee}
+.hero{min-height:460px}
+.hero h1{font-size:40px}
+.outline{margin:12px 0 0}
+.track-form{flex-direction:column}
+.stats{grid-template-columns:repeat(2,1fr);gap:25px 10px}
+.stat:nth-child(2){border:0}
+.service-grid,.about-grid,.process-grid,.contact-grid,.footer-grid,.form-grid{grid-template-columns:1fr}
+.about-img{height:270px}
+.section-title h2{font-size:28px}
+.booking-box{padding:20px}
+.full{grid-column:auto}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<div class="container navbar">
+<a href="#home" class="logo">Swift<span>Ship.</span></a>
+<button class="menu" id="menu" aria-label="Toggle menu">☰</button>
+<nav id="nav">
+<a href="#home">Home</a>
+<a href="#services">Services</a>
+<a href="#about">About</a>
+<a href="#booking">Book Shipment</a>
+<a href="#contact">Contact</a>
+<a href="#tracking" class="btn">Track Parcel</a>
+</nav>
+</div>
+</header>
+
+<section class="hero" id="home">
+<div class="container hero-content">
+<small>FAST • SECURE • RELIABLE</small>
+<h1>Your World.<br>Delivered Faster.</h1>
+<p>Professional courier, transportation and logistics solutions for individuals and businesses. Send packages with confidence.</p>
+<a href="#booking" class="btn">Ship a Package →</a>
+<a href="#services" class="outline">Our Services</a>
+</div>
+</section>
+
+<div class="container" id="tracking">
+<div class="tracking">
+<h2>Track Your Shipment</h2>
+<p>Enter a demo tracking number to view its sample status.</p>
+<form class="track-form" id="trackForm">
+<input id="trackInput" placeholder="Enter tracking number e.g. SW123456" required>
+<button class="btn" type="submit">Track Shipment →</button>
+</form>
+<div id="trackingResult" aria-live="polite"></div>
+</div>
+</div>
+
+<div class="container stats">
+<div class="stat"><h2>250K+</h2><p>Packages Delivered</p></div>
+<div class="stat"><h2>120+</h2><p>Service Locations</p></div>
+<div class="stat"><h2>98%</h2><p>Customer Satisfaction</p></div>
+<div class="stat"><h2>24/7</h2><p>Customer Support</p></div>
+</div>
+
+<section class="services" id="services">
+<div class="container">
+<div class="section-title">
+<h2>Our Logistics Services</h2>
+<p>Smart shipping solutions for every delivery.</p>
+</div>
+<div class="service-grid">
+<div class="card"><div class="icon">🚀</div><h3>Express Delivery</h3><p>Priority shipping for urgent packages and documents.</p><a class="more" href="#booking">Book Delivery →</a></div>
+<div class="card"><div class="icon">🌍</div><h3>International Shipping</h3><p>Shipping solutions for packages traveling across borders.</p><a class="more" href="#booking">Ship Worldwide →</a></div>
+<div class="card"><div class="icon">🚛</div><h3>Freight Transport</h3><p>Flexible transport options for bulk and commercial cargo.</p><a class="more" href="#booking">Move Freight →</a></div>
+<div class="card"><div class="icon">📦</div><h3>Warehousing</h3><p>Storage and distribution support for growing businesses.</p><a class="more" href="#contact">Learn More →</a></div>
+</div>
+</div>
+</section>
+
+<section id="about">
+<div class="container about-grid">
+<img class="about-img" src="https://images.unsplash.com/photo-1566576912321-d58ddd7a6088?auto=format&fit=crop&w=1000&q=80" alt="Logistics and parcel handling">
+<div class="about-text">
+<small style="color:#ff8c25;font-weight:bold">ABOUT SWIFTSHIP</small>
+<h2>Moving Businesses Forward, One Delivery at a Time.</h2>
+<p>We help businesses and individuals manage deliveries with flexible logistics solutions and convenient shipment tools.</p>
+<p>From small parcels to commercial freight, our website template provides a simple starting point for a modern courier business.</p>
+<ul>
+<li>Reliable delivery solutions</li>
+<li>Shipment tracking interface</li>
+<li>Flexible shipping services</li>
+<li>Customer-focused support</li>
+</ul>
+<a class="btn" href="#contact">Contact Our Team</a>
+</div>
+</div>
+</section>
+
+<section class="process">
+<div class="container">
+<div class="section-title"><h2>How It Works</h2><p>Three simple steps to get your package moving.</p></div>
+<div class="process-grid">
+<div class="step"><div class="number">1</div><h3>Book Shipment</h3><p>Enter sender, receiver and package information.</p></div>
+<div class="step"><div class="number">2</div><h3>Prepare Package</h3><p>Get your parcel ready for pickup and transportation.</p></div>
+<div class="step"><div class="number">3</div><h3>Track Delivery</h3><p>Use your reference number to check sample shipment status.</p></div>
+</div>
+</div>
+</section>
+
+<section class="booking" id="booking">
+<div class="container">
+<div class="section-title"><h2>Book a Shipment</h2><p>Fill in the details to create a sample booking request.</p></div>
+<div class="booking-box">
+<form id="bookingForm">
+<div class="form-grid">
+<div class="field"><label for="sender">Sender Name *</label><input id="sender" required placeholder="Full name"></div>
+<div class="field"><label for="receiver">Receiver Name *</label><input id="receiver" required placeholder="Receiver's name"></div>
+<div class="field"><label for="phone">Sender Phone *</label><input id="phone" type="tel" required placeholder="Phone number"></div>
+<div class="field"><label for="receiverPhone">Receiver Phone *</label><input id="receiverPhone" type="tel" required placeholder="Phone number"></div>
+<div class="field"><label for="origin">Pickup City *</label><input id="origin" required placeholder="e.g. Mumbai"></div>
+<div class="field"><label for="destination">Destination City *</label><input id="destination" required placeholder="e.g. Delhi"></div>
+<div class="field"><label for="type">Package Type *</label><select id="type" required><option value="">Select type</option><option>Documents</option><option>Parcel</option><option>Electronics</option><option>Commercial Cargo</option></select></div>
+<div class="field"><label for="weight">Weight (kg) *</label><input id="weight" type="number" min="0.1" step="0.1" required placeholder="e.g. 2.5"></div>
+<div class="field full"><label for="address">Delivery Address *</label><textarea id="address" rows="3" required placeholder="Full delivery address"></textarea></div>
+<div class="field full"><button class="btn" type="submit">Create Booking Request →</button></div>
+</div>
+<div id="bookingResult" aria-live="polite"></div>
+</form>
+</div>
+</div>
+</section>
+
+<section id="contact">
+<div class="container">
+<div class="section-title"><h2>Contact Us</h2><p>Our team is here to help with your logistics questions.</p></div>
+<div class="contact-grid">
+<div class="contact-card"><div class="icon">📞</div><h3>Call Us</h3><p>+91 98765 43210</p><p>Demo number</p></div>
+<div class="contact-card"><div class="icon">✉️</div><h3>Email Us</h3><p>support@swiftship.example</p><p>Demo email</p></div>
+<div class="contact-card"><div class="icon">📍</div><h3>Our Office</h3><p>Mumbai, Maharashtra</p><p>Sample address</p></div>
+</div>
+</div>
+</section>
+
+<footer>
+<div class="container">
+<div class="footer-grid">
+<div><a href="#home" class="logo" style="color:white">Swift<span>Ship.</span></a><p>Shipping, transportation and logistics website starter template for your business.</p></div>
+<div><h3>Quick Links</h3><a href="#home">Home</a><a href="#about">About Us</a><a href="#services">Services</a><a href="#contact">Contact</a></div>
+<div><h3>Services</h3><a href="#services">Express Delivery</a><a href="#services">International Shipping</a><a href="#services">Freight</a><a href="#services">Warehousing</a></div>
+<div><h3>Support</h3><a href="#tracking">Track Parcel</a><a href="#booking">Book Shipment</a><a href="#contact">Help Center</a></div>
+</div>
+<div class="copyright">© <span id="year"></span> SwiftShip Logistics. Demo website template.</div>
+</div>
+</footer>
+
+<script>
+const menu = document.getElementById("menu");
+const nav = document.getElementById("nav");
+
+menu.addEventListener("click", () => {
+  nav.classList.toggle("active");
+  menu.textContent = nav.classList.contains("active") ? "✕" : "☰";
+});
+
+nav.querySelectorAll("a").forEach(link => {
+  link.addEventListener("click", () => {
+    nav.classList.remove("active");
+    menu.textContent = "☰";
+  });
+});
+
+// Sample tracking records only
+const shipments = {
+  SW123456: {
+    status: "In Transit",
+    origin: "Mumbai",
+    destination: "Delhi",
+    message: "Your parcel is moving toward its destination."
+  },
+  SW789012: {
+    status: "Out for Delivery",
+    origin: "Pune",
+    destination: "Mumbai",
+    message: "Your parcel is scheduled for delivery."
+  },
+  SW345678: {
+    status: "Delivered",
+    origin: "Delhi",
+    destination: "Jaipur",
+    message: "This sample shipment has been delivered."
+  }
+};
+
+document.getElementById("trackForm").addEventListener("submit", event => {
+  event.preventDefault();
+  const number = document.getElementById("trackInput").value.trim().toUpperCase();
+  const result = document.getElementById("trackingResult");
+  const shipment = shipments[number];
+
+  result.replaceChildren();
+  const box = document.createElement("div");
+  box.className = "result";
+
+  const heading = document.createElement("h3");
+  const details = document.createElement("p");
+  const note = document.createElement("p");
+
+  if (shipment) {
+    const badge = document.createElement("span");
+    badge.className = "status";
+    badge.textContent = shipment.status;
+    heading.textContent = "Tracking: " + number;
+    details.textContent = shipment.origin + " → " + shipment.destination + ". " + shipment.message;
+    box.append(badge, heading, details);
+  } else {
+    heading.textContent = "Shipment not found";
+    details.textContent = "Try SW123456, SW789012, or SW345678.";
+    box.append(heading, details);
+  }
+
+  note.style.cssText = "font-size:12px;color:#64748b;margin-top:8px";
+  note.textContent = "Demo only. This page is not connected to a real courier tracking system.";
+  box.append(note);
+  result.append(box);
+});
+
+// Sample booking form; no real booking is submitted
+document.getElementById("bookingForm").addEventListener("submit", event => {
+  event.preventDefault();
+  const reference = "SW" + Math.floor(100000 + Math.random() * 900000);
+  document.getElementById("bookingResult").textContent =
+    "Demo request created. Reference: " + reference +
+    ". No shipment has been booked or sent to a server.";
+  event.target.reset();
+});
+
+document.getElementById("year").textContent = new Date().getFullYear();
+</script>
+
+</body>
+</html>
